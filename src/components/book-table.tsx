@@ -1,4 +1,4 @@
-"'use client'"
+'use client'
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
@@ -7,15 +7,14 @@ import { User } from '@/types/user'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Download, Pencil, Trash, Plus, Search } from 'lucide-react'
+import { Download, Pencil,Plus, Search } from 'lucide-react'
 
 interface BookTableProps {
   user?: User
   books: Book[]
-  onDelete: (id: number) => void
 }
 
-export default function BookTable({ user, books, onDelete }: BookTableProps) {
+export default function BookTable({ user, books }: BookTableProps) {
   const [filteredBooks, setFilteredBooks] = useState<Book[]>(books)
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -24,7 +23,7 @@ export default function BookTable({ user, books, onDelete }: BookTableProps) {
       books.filter((book) =>
         book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.category.toLowerCase().includes(searchTerm.toLowerCase())
+        book.category?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     )
   }, [searchTerm, books])
@@ -40,6 +39,8 @@ export default function BookTable({ user, books, onDelete }: BookTableProps) {
   const handleModify = (id: number) => {
     console.log("'Modify book'", id)
   }
+
+  
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
@@ -62,7 +63,7 @@ export default function BookTable({ user, books, onDelete }: BookTableProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredBooks.map((book) => (
             
-            <Card key={book.cover} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <Card key={book.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
               <div className="relative h-64">
                 
                 
@@ -88,9 +89,7 @@ export default function BookTable({ user, books, onDelete }: BookTableProps) {
                     <Button variant="outline" size="icon" onClick={() => handleModify(book.id)} className="text-yellow-500 hover:bg-yellow-100">
                       <Pencil className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="icon" onClick={() => onDelete(book.id)} className="text-red-500 hover:bg-red-100">
-                      <Trash className="h-4 w-4" />
-                    </Button>
+                    
                   </div>
                 )}
               </CardFooter>
