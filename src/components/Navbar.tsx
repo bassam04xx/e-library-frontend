@@ -4,27 +4,39 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Book, LogOut, User } from 'lucide-react';
 
+const getCookie = (name: string) => {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    const lastPart = parts.pop();
+    if (lastPart) return lastPart.split(';').shift();
+  }
+  return undefined;
+};
+
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; Max-Age=-0; path=/`;
+};
+
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const fullname=localStorage.getItem('user');
-    if (token) {
+    const token = getCookie('access_token');
+    const user= getCookie('username');
+    if (user) {
       setIsAuthenticated(true);
-      setUsername(fullname as string)
+      setUsername(user as string)
     } else {
       setIsAuthenticated(false);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('user');
-    
+    deleteCookie('access_token');
+    deleteCookie('refresh_token');
+    deleteCookie('username');
     
     setIsAuthenticated(false);
     setUsername('');
