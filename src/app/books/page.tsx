@@ -31,11 +31,16 @@ const BooksPage = () => {
         }
       });
       const data = await response.json();
+
       setBooks(data);
+
     };
 
     fetchBooks();
   }, []);
+  useEffect(() => {
+    console.log("Updated books:", books);
+  }, [books]); 
 
   const handleAddBook = () => {
     const bookToAdd = { id: books.length + 1, ...newBook };
