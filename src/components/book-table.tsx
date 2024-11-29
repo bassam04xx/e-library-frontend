@@ -63,7 +63,6 @@ export default function BookTable({ user, books, onDelete }: BookTableProps) {
           {filteredBooks.map((book) => (
             
             <Card key={book.cover} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                <div>{book.cover}</div>
               <div className="relative h-64">
                 
                 

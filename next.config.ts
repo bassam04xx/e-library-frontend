@@ -5,14 +5,13 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        // Define the pattern for remote images
         protocol: 'https',
-        hostname: 'img.freepik.com',
+        hostname: '*',
         port: '',
         pathname: '/**',
       },
     ],
   },
-}
+};
 
 export default nextConfig;

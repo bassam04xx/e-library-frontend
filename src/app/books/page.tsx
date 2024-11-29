@@ -2,18 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import BookTable from '@/components/book-table';
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  description: string;
-}
+import { Book, BookCreation } from '@/types/book';
 
 const BooksPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [newBook, setNewBook] = useState({ title: '', author: '', description: '' });
+  const [newBook, setNewBook] = useState<BookCreation>({title: '', author: '', description: '', file: null, category: '', cover: '', created_at: new Date().toISOString()});
 
   useEffect(() => {
     const role = localStorage.getItem('user_role');
@@ -45,7 +39,7 @@ const BooksPage = () => {
   const handleAddBook = () => {
     const bookToAdd = { id: books.length + 1, ...newBook };
     setBooks([...books, bookToAdd]);
-    setNewBook({ title: '', author: '', description: '' });
+    setNewBook({ title: '', author: '', description: '', file: null, category: '', cover: '', created_at: new Date().toISOString() });
   };
 
   const handleDeleteBook = (id: number) => {
@@ -56,13 +50,14 @@ const BooksPage = () => {
     <div className="p-8">
       
       <h2 className="text-xl mb-2">Book List</h2>
-      <BookTable user={{ isAdmin, isVisitor: !isAdmin }} books={books.map(book => ({
+      <BookTable user={{ isAdmin, isVisitor: !isAdmin }} books={books} onDelete={handleDeleteBook} />
+      {/* <BookTable user={{ isAdmin, isVisitor: !isAdmin }} books={books.map(book => ({
         ...book,
         file: '',
         category: '',
         cover: '',
         created_at: new Date().toISOString()
-      }))} onDelete={handleDeleteBook} />
+      }))} onDelete={handleDeleteBook} /> */}
       
       {!isAdmin && (
         <p className="text-gray-500 mt-4">As a visitor, you can only read and add books.</p>
