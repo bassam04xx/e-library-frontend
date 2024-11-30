@@ -1,3 +1,5 @@
+import { NextRequest } from "next/server";
+
 interface DecodedToken {
     username: string;
     // Add other properties that are in your JWT payload
@@ -17,5 +19,7 @@ interface DecodedToken {
       return null;
     }
   }
+
+  
   
   

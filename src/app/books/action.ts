@@ -1,62 +1,65 @@
-import { parseCookies } from 'nookies';
-import { GetServerSidePropsContext } from 'next';
+  'use server';
+  import { getCookie } from "@/utils/sessions";
 
-export const fetchBooks = async (context: GetServerSidePropsContext) => {
-  const { ACCESS_TOKEN } = parseCookies(context); // Retrieve the token from cookies
-
-  const response = await fetch('http://127.0.0.1:8000/api/books/', {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDg5OTc3LCJpYXQiOjE3MzI5MTcxNzcsImp0aSI6IjIzMTZlMDNhOWI2ZjQ3NGM4Y2RmNTJlODg0MDlkYTQ4IiwidXNlcl9pZCI6Mn0.r2VsIPBT-m8fh_0uESA0fuJwkw8z8QhdU2g14BHyR-I`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch books');
-  }
-
-  return response.json();
-};
-
-export const deleteBook = async (id: number, context: GetServerSidePropsContext) => {
-  const { ACCESS_TOKEN } = parseCookies(context); // Retrieve the token from cookies
-
-  const response = await fetch(`http://127.0.0.1:8000/api/books/${id}/`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDg5OTc3LCJpYXQiOjE3MzI5MTcxNzcsImp0aSI6IjIzMTZlMDNhOWI2ZjQ3NGM4Y2RmNTJlODg0MDlkYTQ4IiwidXNlcl9pZCI6Mn0.r2VsIPBT-m8fh_0uESA0fuJwkw8z8QhdU2g14BHyR-I`,
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (!response.ok) {
-    const errorMessage = await response.text();
-    console.error('Error deleting book:', errorMessage);
-    throw new Error('Failed to delete book');
-  }
-
-  return id; // Return the ID of the deleted book
-};
-
-// New function to add a book
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const addBook = async (bookData: any, context: GetServerSidePropsContext) => {
-    const { ACCESS_TOKEN } = parseCookies(context); // Retrieve the token from cookies
+  export const fetchBooks = async () => {
+    const session = await getCookie('session');
   
-    const response = await fetch('http://127.0.0.1:8000/api/books/', {
-      method: 'POST',
+    if (!session) {
+      console.warn('No session found. Skipping fetchBooks.');
+      return [];
+    }
+  
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/`, {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMzMDg5OTc3LCJpYXQiOjE3MzI5MTcxNzcsImp0aSI6IjIzMTZlMDNhOWI2ZjQ3NGM4Y2RmNTJlODg0MDlkYTQ4IiwidXNlcl9pZCI6Mn0.r2VsIPBT-m8fh_0uESA0fuJwkw8z8QhdU2g14BHyR-I`,
+        'Authorization': `Bearer ${session}`,
+        'Content-Type': 'application/json',
       },
-      body: bookData // Send the book data as JSON
     });
   
     if (!response.ok) {
-      const errorMessage = await response.text();
-      console.error('Error adding book:', errorMessage);
-      throw new Error('Failed to add book');
+      throw new Error('Failed to fetch books');
     }
   
-    return response.json(); // Return the added book data
+    return response.json();
   };
+  
+  export const deleteBook = async (id: number) => {
+    const session = await getCookie('session');
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${id}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${session}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      console.error('Error deleting book:', errorMessage);
+      throw new Error('Failed to delete book');
+    }
+
+    return id; // Return the ID of the deleted book
+  };
+
+  // New function to add a book
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export const addBook = async (bookData: any) => {
+      const session = await getCookie('session');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/`, { 
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session}`,
+        },
+        body: bookData // Send the book data as JSON
+      });
+    
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        console.error('Error adding book:', errorMessage);
+        throw new Error('Failed to add book');
+      }
+    
+      return response.json(); // Return the added book data
+    };
