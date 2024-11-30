@@ -1,3 +1,5 @@
+/* eslint-disable prefer-const */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // e-library-frontend/src/components/AddBookForm.tsx
 
 'use client'; // Mark this component as a client component

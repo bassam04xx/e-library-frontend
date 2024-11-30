@@ -3,18 +3,8 @@
 
 import BookTable from '@/components/book-table';
 import AddBookForm from '@/components/AddBookForm';
-import { fetchBooks, deleteBook } from './action';
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  description: string;
-  file?: string;
-  category?: string;
-  cover?: string;
-  created_at?: string;
-}
+import { fetchBooks } from './action';
+import {Book} from '@/types/book'
 
 const BooksPage = async (context: any) => {
   const initialBooks: Book[] = await fetchBooks(context);
