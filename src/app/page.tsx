@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
-import { BookOpen, Sparkles, Zap, ChevronDown } from "lucide-react"
-import { motion, useViewportScroll, useTransform } from "framer-motion" 
+import { BookOpen, Sparkles, Zap, ChevronDown } from 'lucide-react'
+import { motion, useViewportScroll, useTransform } from 'framer-motion'
 
 export default function HomePage() {
   const [currentBook, setCurrentBook] = useState(0)
@@ -58,7 +58,7 @@ export default function HomePage() {
           <FeatureCard
             icon={<Sparkles className="w-12 h-12" />}
             title="AI-Powered Recommendations"
-            description="Our quantum AI knows what you want to read before do. Spooky? Nah, just smart."
+            description="Our quantum AI knows what you want to read before you do. Spooky? Nah, just smart."
           />
           <FeatureCard
             icon={<Zap className="w-12 h-12" />}
