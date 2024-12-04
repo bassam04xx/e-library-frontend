@@ -29,16 +29,9 @@ export default function BookTable({ user, books }: BookTableProps) {
   }, [searchTerm, books])
 
   const handleDownload = (id: number) => {
-    window.open(`http://127.0.0.1:8000/api/books/${id}/download/`, "'_blank'");
+    window.open(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/books/${id}/download`, '_blank')
   }
 
-  const handleAdd = () => {
-    console.log("'Add book'")
-  }
-
-  const handleModify = (id: number) => {
-    console.log("'Modify book'", id)
-  }
 
   
 
@@ -55,10 +48,7 @@ export default function BookTable({ user, books }: BookTableProps) {
               className="pl-10 pr-4 py-2 border-2 border-purple-500 focus:border-pink-500 focus:ring-pink-500 rounded-full"
             />
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          </div>
-          <Button onClick={handleAdd} className="bg-green-500 hover:bg-green-600 text-white rounded-full">
-            <Plus className="mr-2 h-4 w-4" /> Add Book
-          </Button>
+          </div>  
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredBooks.map((book) => (
@@ -86,10 +76,7 @@ export default function BookTable({ user, books }: BookTableProps) {
                 </Button>
                 {user?.isAdmin && (
                   <div className="flex space-x-2">
-                    <Button variant="outline" size="icon" onClick={() => handleModify(book.id)} className="text-yellow-500 hover:bg-yellow-100">
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    
+                  
                   </div>
                 )}
               </CardFooter>
